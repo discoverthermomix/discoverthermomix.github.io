@@ -68,6 +68,7 @@
         flex-direction: column; /* Makes content stack vertically */
         align-items: flex-start; /* Aligns content to the start (left) */
         justify-content: center; /* Centers content vertically */
+        padding: 20px;
       }
       .text-content h1 {
         font-size: 36px; 
@@ -102,16 +103,31 @@
         padding: 10px;
         height: auto;
       }
-      .section-container {
+      .section-container.img-on-right {
         flex-direction: column;
         padding: 10px;
         height: auto;
       }
+      .section-container.img-on-left{
+        flex-direction: column-reverse;
+        padding: 10px;
+        height: auto;
+      }
+      
       .image-content {
         width: 100%;
       }
+      
+      .image-content-reduced {
+        width: 80%;
+        margin: 0 auto;
+        display: block;
+      }
+      
+      
       .text-content {
         width: 100%;
+        padding: 0 0 10px 0;
       }
     }  
     </style>
@@ -130,8 +146,8 @@
       </div>
     </section>
     
-    <section class="section-container white">
-      <div class="image-content">
+    <section class="section-container white img-on-left">
+      <div class="image-content image-content-reduced">
         <img src="./img/tm6.webp" style="width: 100%; height: auto" alt="Thermomix Image" loading="lazy"/>
       </div>
       <div class="text-content">
@@ -145,7 +161,7 @@
       </div>
     </section>
    
-    <section class="section-container white">
+    <section class="section-container white img-on-right">
       <div class="text-content">
         <h1>Save time and money</h1>
         <span>
@@ -172,8 +188,8 @@
 
 
 
-    <section class="section-container white">
-      <div class="image-content">
+    <section class="section-container white img-on-left">
+      <div class="image-content image-content-reduced">
         <img src="./img/tm6-parts.webp" alt="Thermomix Image" loading="lazy"/>
       </div>
       <div class="text-content">
@@ -185,7 +201,7 @@
       </div>
     </section>
 
-    <section class="section-container white">
+    <section class="section-container white img-on-right">
       <div class="text-content">
         <h1>Creative and economical</h1>
         <span>
@@ -195,12 +211,12 @@
           Thermomix® supports a sustainable lifestyle. Its energy-efficient design and the ability to cook from scratch means you can reduce food waste, lower your grocery bills, and make meals that are good for both you and the environment.
         </span>
       </div>
-      <div class="image-content">
+      <div class="image-content image-content-reduced">
         <img src="./img/creativity.webp" alt="Thermomix Image" loading="lazy"/>
       </div>
     </section>
 
-    <section class="section-container white offer">
+    <section class="section-container white offer img-on-left">
       <div class="image-content">
         <img src="./img/small-tm6.webp" alt="Thermomix Image" loading="lazy"/>
       </div>
@@ -234,7 +250,7 @@
       </div>
     </section>
 
-    <section class="section-container">
+    <section class="section-container img-on-right">
       <div class="text-content">
         <h1>Ready to discover more</h1>
         <span>
