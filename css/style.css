@@ -89,6 +89,43 @@ h2 {
   color: #fff !important;
 }
 
+.site-nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.site-nav-toggle-bar {
+  display: block;
+  height: 2px;
+  background-color: #333;
+  border-radius: 1px;
+  transition: transform 0.2s, opacity 0.2s, background-color 0.2s;
+}
+
+.site-nav-toggle:hover .site-nav-toggle-bar {
+  background-color: #e2001a;
+}
+
+.site-nav-toggle[aria-expanded="true"] .site-nav-toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.site-nav-toggle[aria-expanded="true"] .site-nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.site-nav-toggle[aria-expanded="true"] .site-nav-toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 /* ===== BUTTONS ===== */
 .btn-primary {
   display: inline-block;
@@ -475,8 +512,39 @@ h2 {
     width: 100%;
   }
 
+  .site-nav-toggle {
+    display: flex;
+    margin-right: -10px;
+  }
+
   .site-nav-links {
     display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px 24px 20px;
+    background: #fff;
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .site-nav-links.is-open {
+    display: flex;
+  }
+
+  .site-nav-links a {
+    display: block;
+    padding: 12px 0;
+    font-size: 16px;
+  }
+
+  .site-nav-links .btn-nav {
+    margin-top: 8px;
+    padding: 12px 20px !important;
+    text-align: center;
   }
 
   .whatsapp-float {

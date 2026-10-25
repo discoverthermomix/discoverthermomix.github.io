@@ -74,7 +74,12 @@
     <nav class="site-nav" aria-label="Main navigation">
       <div class="site-nav-inner">
         <a href="#" class="site-nav-logo">Discover Thermomix®</a>
-        <ul class="site-nav-links">
+        <button type="button" class="site-nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav-links">
+          <span class="site-nav-toggle-bar" aria-hidden="true"></span>
+          <span class="site-nav-toggle-bar" aria-hidden="true"></span>
+          <span class="site-nav-toggle-bar" aria-hidden="true"></span>
+        </button>
+        <ul class="site-nav-links" id="site-nav-links">
           <li><a href="#features">Features</a></li>
           <li><a href="#pricing">Pricing</a></li>
           <li><a href="#contact">Contact</a></li>
@@ -337,6 +342,35 @@
       </svg>
       Message me on WhatsApp
     </a>
+
+    <!-- ===== MOBILE MENU TOGGLE ===== -->
+    <script>
+      (function () {
+        var toggle = document.querySelector('.site-nav-toggle');
+        var links = document.getElementById('site-nav-links');
+
+        function setOpen(open) {
+          links.classList.toggle('is-open', open);
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        }
+
+        toggle.addEventListener('click', function () {
+          setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+        });
+
+        links.addEventListener('click', function (event) {
+          if (event.target.closest('a')) setOpen(false);
+        });
+
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+            setOpen(false);
+            toggle.focus();
+          }
+        });
+      })();
+    </script>
 
   </body>
 </html>
