@@ -270,7 +270,7 @@ h2 {
   align-items: center;
   gap: 10px;
   background-color: #25D366;
-  color: #fff;
+  color: #111;
   font-family: 'Lato', Arial, sans-serif;
   font-weight: 700;
   font-size: 15px;
@@ -289,7 +289,7 @@ h2 {
 .whatsapp-float svg {
   width: 24px;
   height: 24px;
-  fill: #fff;
+  fill: currentColor;
   flex-shrink: 0;
 }
 
@@ -348,7 +348,7 @@ h2 {
   border-top: 1px solid #333;
   text-align: center;
   font-size: 13px;
-  color: #666;
+  color: #999;
 }
 
 /* ===== VIDEO SECTION ===== */
@@ -459,6 +459,11 @@ h2 {
   .text-content {
     width: 100%;
     padding: 0 0 10px 0;
+  }
+
+  .gallery-section,
+  .video-section {
+    padding: 40px 16px;
   }
 
   .gallery-grid {
