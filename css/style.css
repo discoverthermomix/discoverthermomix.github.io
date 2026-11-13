@@ -505,6 +505,22 @@ h2 {
   color: #444;
 }
 
+.faq-answer p + p {
+  margin-top: 12px;
+}
+
+.payment-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.payment-methods img {
+  width: 168px;
+  height: 60px;
+  object-fit: contain;
+}
+
 /* ===== LOCATION LINK ===== */
 .nav-pin-icon {
   width: 14px;
