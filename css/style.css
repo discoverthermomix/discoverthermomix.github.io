@@ -423,6 +423,33 @@ h2 {
   height: 100%;
 }
 
+/* ===== REVIEWS SECTION ===== */
+#reviews {
+  scroll-margin-top: 64px; /* keep heading clear of the sticky nav */
+}
+
+.reviews-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.reviews-section h2 {
+  margin-bottom: 12px;
+}
+
+.reviews-section p {
+  color: #555;
+  font-size: 17px;
+  margin-bottom: 28px;
+}
+
+.reviews-widget {
+  min-height: 250px; /* reserve space while the widget loads */
+  text-align: left;
+}
+
 /* ===== FAQ SECTION ===== */
 #faq {
   scroll-margin-top: 64px; /* keep heading clear of the sticky nav */
@@ -597,6 +624,7 @@ h2 {
   }
 
   .gallery-section,
+  .reviews-section,
   .video-section,
   .faq-section {
     padding: 40px 16px;
