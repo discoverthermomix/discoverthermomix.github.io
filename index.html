@@ -298,7 +298,11 @@
       <div class="reviews-section">
         <h2>What My Customers Say</h2>
         <p>Real reviews from Thermomix® owners on Google.</p>
-        <ul class="reviews-grid" id="reviews-grid" hidden></ul>
+        <div class="reviews-carousel" id="reviews-carousel" hidden>
+          <button type="button" class="reviews-arrow reviews-arrow-prev" aria-label="Previous reviews">&#8249;</button>
+          <ul class="reviews-track" id="reviews-grid"></ul>
+          <button type="button" class="reviews-arrow reviews-arrow-next" aria-label="Next reviews">&#8250;</button>
+        </div>
         <a href="https://www.google.com/maps/place/Discover+Thermomix%C2%AE/@53.2724907,-9.1054164,19.75z/data=!4m6!3m5!1s0x485b97e2682fe9dd:0xf778c032e9632b53!8m2!3d53.272615!4d-9.1059637!16s%2Fg%2F11x5wj578f" target="_blank" rel="noopener noreferrer" class="reviews-all-link">
           See all reviews on Google
         </a>
@@ -467,45 +471,152 @@
     <!-- ===== REVIEWS (rendered from reviews.json) ===== -->
     <script>
       (function () {
-        var grid = document.getElementById('reviews-grid');
+        var carousel = document.getElementById('reviews-carousel');
+        var track = document.getElementById('reviews-grid');
         var MAX_REVIEWS = 6;
+        var AVATAR_COLORS = ['#e2001a', '#1a73e8', '#188038', '#f29900', '#8e24aa', '#00897b'];
+        var SVG_NS = 'http://www.w3.org/2000/svg';
 
-        function formatDate(iso) {
+        var GOOGLE_ICON =
+          '<svg viewBox="0 0 48 48" aria-hidden="true">' +
+          '<path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>' +
+          '<path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>' +
+          '<path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>' +
+          '<path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>' +
+          '</svg>';
+
+        var VERIFIED_ICON =
+          '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+          '<path fill="#4285F4" d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12z"/>' +
+          '<path fill="#fff" d="M10.09 16.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"/>' +
+          '</svg>';
+
+        function parseDate(iso) {
           // Date-only strings are parsed as UTC; add a time so they stay on the same local day.
-          var date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso + 'T00:00:00' : iso);
-          if (isNaN(date)) return '';
-          return date.toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' });
+          return new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso + 'T00:00:00' : iso);
         }
 
-        function createCard(review) {
+        function timeAgo(iso) {
+          var date = parseDate(iso);
+          if (isNaN(date)) return '';
+          var days = Math.floor((Date.now() - date.getTime()) / 86400000);
+          if (days < 1) return 'today';
+          if (days < 7) return days === 1 ? 'a day ago' : days + ' days ago';
+          if (days < 30) { var w = Math.floor(days / 7); return w === 1 ? 'a week ago' : w + ' weeks ago'; }
+          if (days < 365) { var m = Math.floor(days / 30); return m === 1 ? 'a month ago' : m + ' months ago'; }
+          var y = Math.floor(days / 365);
+          return y === 1 ? 'a year ago' : y + ' years ago';
+        }
+
+        function initials(name) {
+          return name.trim().split(/\s+/).slice(0, 2).map(function (p) { return p.charAt(0); }).join('').toUpperCase();
+        }
+
+        function createAvatar(review, index) {
+          var avatar = document.createElement('div');
+          avatar.className = 'review-avatar';
+          if (review.avatar) {
+            var img = document.createElement('img');
+            img.src = review.avatar;
+            img.alt = '';
+            img.loading = 'lazy';
+            avatar.appendChild(img);
+          } else {
+            avatar.textContent = initials(review.author);
+            avatar.style.background = AVATAR_COLORS[index % AVATAR_COLORS.length];
+          }
+          return avatar;
+        }
+
+        function createCard(review, index) {
           var stars = Math.max(1, Math.min(5, Math.round(Number(review.stars) || 0)));
           var card = document.createElement('li');
           card.className = 'review-card';
 
-          var rating = document.createElement('div');
-          rating.className = 'review-stars';
-          rating.setAttribute('role', 'img');
-          rating.setAttribute('aria-label', stars + ' out of 5 stars');
-          rating.textContent = '★★★★★'.slice(0, stars) + '☆☆☆☆☆'.slice(0, 5 - stars);
+          // Header: avatar, name + relative date, Google logo
+          var header = document.createElement('div');
+          header.className = 'review-header';
+          var who = document.createElement('div');
+          who.className = 'review-who';
+          var author = document.createElement('strong');
+          author.className = 'review-author';
+          author.textContent = review.author;
+          var time = document.createElement('time');
+          time.className = 'review-date';
+          time.dateTime = review.date;
+          time.textContent = timeAgo(review.date);
+          who.appendChild(author);
+          who.appendChild(time);
+          var google = document.createElement('span');
+          google.className = 'review-source';
+          google.innerHTML = GOOGLE_ICON;
+          header.appendChild(createAvatar(review, index));
+          header.appendChild(who);
+          header.appendChild(google);
 
+          // Stars + verified badge
+          var rating = document.createElement('div');
+          rating.className = 'review-rating';
+          var starsEl = document.createElement('span');
+          starsEl.className = 'review-stars';
+          starsEl.setAttribute('role', 'img');
+          starsEl.setAttribute('aria-label', stars + ' out of 5 stars');
+          starsEl.innerHTML = '<span class="on">' + '★★★★★'.slice(0, stars) + '</span>' + '★★★★★'.slice(0, 5 - stars);
+          var verified = document.createElement('span');
+          verified.className = 'review-verified';
+          verified.title = 'Verified review';
+          verified.innerHTML = VERIFIED_ICON;
+          rating.appendChild(starsEl);
+          rating.appendChild(verified);
+
+          // Clamped text + Read more
           var text = document.createElement('p');
           text.className = 'review-text';
           text.textContent = review.text;
+          var more = document.createElement('button');
+          more.type = 'button';
+          more.className = 'review-more';
+          more.textContent = 'Read more';
+          more.hidden = true;
+          more.addEventListener('click', function () {
+            var expanded = card.classList.toggle('is-expanded');
+            more.textContent = expanded ? 'Hide' : 'Read more';
+          });
 
-          var footer = document.createElement('div');
-          footer.className = 'review-meta';
-          var author = document.createElement('strong');
-          author.textContent = review.author;
-          var time = document.createElement('time');
-          time.dateTime = review.date;
-          time.textContent = formatDate(review.date);
-          footer.appendChild(author);
-          footer.appendChild(time);
-
+          card.appendChild(header);
           card.appendChild(rating);
           card.appendChild(text);
-          card.appendChild(footer);
+          card.appendChild(more);
           return card;
+        }
+
+        function updateReadMore() {
+          track.querySelectorAll('.review-card').forEach(function (card) {
+            if (card.classList.contains('is-expanded')) return;
+            var text = card.querySelector('.review-text');
+            card.querySelector('.review-more').hidden = text.scrollHeight <= text.clientHeight + 1;
+          });
+        }
+
+        function setupArrows() {
+          var prev = carousel.querySelector('.reviews-arrow-prev');
+          var next = carousel.querySelector('.reviews-arrow-next');
+          function step() {
+            var card = track.querySelector('.review-card');
+            var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+            return card ? card.offsetWidth + gap : track.clientWidth;
+          }
+          function update() {
+            var max = track.scrollWidth - track.clientWidth - 1;
+            prev.disabled = track.scrollLeft <= 0;
+            next.disabled = track.scrollLeft >= max;
+            carousel.classList.toggle('no-scroll', max <= 0);
+          }
+          prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+          next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+          track.addEventListener('scroll', update, { passive: true });
+          window.addEventListener('resize', function () { update(); updateReadMore(); });
+          update();
         }
 
         fetch('./reviews.json')
@@ -521,11 +632,14 @@
                 return (b.stars - a.stars) || String(b.date).localeCompare(String(a.date));
               })
               .slice(0, MAX_REVIEWS)
-              .forEach(function (review) { grid.appendChild(createCard(review)); });
-            grid.hidden = grid.children.length === 0;
+              .forEach(function (review, i) { track.appendChild(createCard(review, i)); });
+            if (!track.children.length) return;
+            carousel.hidden = false;
+            updateReadMore();
+            setupArrows();
           })
           .catch(function () {
-            // Leave the grid hidden; the "See all reviews on Google" link stays visible.
+            // Leave the carousel hidden; the "See all reviews on Google" link stays visible.
           });
       })();
     </script>

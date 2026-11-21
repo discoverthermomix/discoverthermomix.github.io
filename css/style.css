@@ -445,57 +445,200 @@ h2 {
   margin-bottom: 28px;
 }
 
-.reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  list-style: none;
+.reviews-carousel {
+  position: relative;
   margin: 0 0 32px;
-  padding: 0;
   text-align: left;
 }
 
-.reviews-grid[hidden] {
+.reviews-carousel[hidden] {
+  display: none;
+}
+
+.reviews-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 2 * 24px) / 3);
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.reviews-track::-webkit-scrollbar {
   display: none;
 }
 
 .review-card {
   display: flex;
   flex-direction: column;
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-top: 4px solid #e2001a;
-  border-radius: 8px;
-  padding: 20px 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  align-items: flex-start;
+  scroll-snap-align: start;
+  background: #f3f3f3;
+  border-radius: 16px;
+  padding: 28px 28px 24px;
 }
 
-.review-stars {
-  color: #f5a623;
-  font-size: 20px;
-  letter-spacing: 2px;
-  line-height: 1;
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.review-avatar {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 19px;
+}
+
+.review-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.review-who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.review-author {
+  color: #111;
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.review-date {
+  color: #777;
+  font-size: 15px;
+}
+
+.review-source {
+  flex: none;
+  align-self: flex-start;
+  width: 26px;
+  height: 26px;
+}
+
+.review-source svg,
+.review-verified svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 12px;
 }
 
+.review-stars {
+  color: #d6d6d6;
+  font-size: 24px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.review-stars .on {
+  color: #f4b93e;
+}
+
+.review-verified {
+  width: 20px;
+  height: 20px;
+}
+
 .reviews-section .review-text {
-  flex: 1;
-  margin: 0 0 16px;
-  font-size: 16px;
-  line-height: 1.7;
-  color: #444;
+  margin: 0 0 12px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #111;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
 }
 
-.review-meta {
-  display: flex;
-  flex-direction: column;
-  font-size: 14px;
+.review-card.is-expanded .review-text {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+}
+
+.review-more {
+  margin-top: auto;
+  padding: 0;
+  border: 0;
+  background: none;
   color: #777;
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.review-meta strong {
+.review-more:hover {
   color: #333;
-  font-size: 15px;
+  text-decoration: underline;
+}
+
+.review-more[hidden] {
+  display: none;
+}
+
+.reviews-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  color: #444;
+  font-size: 30px;
+  line-height: 1;
+  padding-bottom: 4px;
+  cursor: pointer;
+}
+
+.reviews-arrow-prev {
+  left: -22px;
+}
+
+.reviews-arrow-next {
+  right: -22px;
+}
+
+.reviews-arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reviews-carousel.no-scroll .reviews-arrow {
+  display: none;
 }
 
 .reviews-all-link {
@@ -689,9 +832,17 @@ h2 {
     padding: 40px 16px;
   }
 
-  .reviews-grid {
-    grid-template-columns: 1fr;
+  .reviews-track {
+    grid-auto-columns: calc((100% - 16px) / 2);
     gap: 16px;
+  }
+
+  .reviews-arrow-prev {
+    left: -8px;
+  }
+
+  .reviews-arrow-next {
+    right: -8px;
   }
 
   .gallery-grid {
@@ -748,5 +899,15 @@ h2 {
   .site-footer-inner {
     flex-direction: column;
     gap: 28px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .reviews-track {
+    grid-auto-columns: 88%;
+  }
+
+  .review-card {
+    padding: 22px 20px 20px;
   }
 }
