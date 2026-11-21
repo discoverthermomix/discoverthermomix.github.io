@@ -298,9 +298,10 @@
       <div class="reviews-section">
         <h2>What My Customers Say</h2>
         <p>Real reviews from Thermomix® owners on Google.</p>
-        <div class="reviews-widget">
-          <script defer async src='https://cdn.trustindex.io/loader.js?434530485cb376835c7623b4189'></script>
-        </div>
+        <ul class="reviews-grid" id="reviews-grid" hidden></ul>
+        <a href="https://www.google.com/maps/place/Discover+Thermomix%C2%AE/@53.2724907,-9.1054164,19.75z/data=!4m6!3m5!1s0x485b97e2682fe9dd:0xf778c032e9632b53!8m2!3d53.272615!4d-9.1059637!16s%2Fg%2F11x5wj578f" target="_blank" rel="noopener noreferrer" class="reviews-all-link">
+          See all reviews on Google
+        </a>
       </div>
     </div>
 
@@ -460,6 +461,72 @@
             toggle.focus();
           }
         });
+      })();
+    </script>
+
+    <!-- ===== REVIEWS (rendered from reviews.json) ===== -->
+    <script>
+      (function () {
+        var grid = document.getElementById('reviews-grid');
+        var MAX_REVIEWS = 6;
+
+        function formatDate(iso) {
+          // Date-only strings are parsed as UTC; add a time so they stay on the same local day.
+          var date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso + 'T00:00:00' : iso);
+          if (isNaN(date)) return '';
+          return date.toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function createCard(review) {
+          var stars = Math.max(1, Math.min(5, Math.round(Number(review.stars) || 0)));
+          var card = document.createElement('li');
+          card.className = 'review-card';
+
+          var rating = document.createElement('div');
+          rating.className = 'review-stars';
+          rating.setAttribute('role', 'img');
+          rating.setAttribute('aria-label', stars + ' out of 5 stars');
+          rating.textContent = '★★★★★'.slice(0, stars) + '☆☆☆☆☆'.slice(0, 5 - stars);
+
+          var text = document.createElement('p');
+          text.className = 'review-text';
+          text.textContent = review.text;
+
+          var footer = document.createElement('div');
+          footer.className = 'review-meta';
+          var author = document.createElement('strong');
+          author.textContent = review.author;
+          var time = document.createElement('time');
+          time.dateTime = review.date;
+          time.textContent = formatDate(review.date);
+          footer.appendChild(author);
+          footer.appendChild(time);
+
+          card.appendChild(rating);
+          card.appendChild(text);
+          card.appendChild(footer);
+          return card;
+        }
+
+        fetch('./reviews.json')
+          .then(function (response) {
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            return response.json();
+          })
+          .then(function (reviews) {
+            if (!Array.isArray(reviews)) return;
+            reviews
+              .filter(function (r) { return r && r.author && r.text; })
+              .sort(function (a, b) {
+                return (b.stars - a.stars) || String(b.date).localeCompare(String(a.date));
+              })
+              .slice(0, MAX_REVIEWS)
+              .forEach(function (review) { grid.appendChild(createCard(review)); });
+            grid.hidden = grid.children.length === 0;
+          })
+          .catch(function () {
+            // Leave the grid hidden; the "See all reviews on Google" link stays visible.
+          });
       })();
     </script>
 

@@ -445,9 +445,68 @@ h2 {
   margin-bottom: 28px;
 }
 
-.reviews-widget {
-  min-height: 250px; /* reserve space while the widget loads */
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  list-style: none;
+  margin: 0 0 32px;
+  padding: 0;
   text-align: left;
+}
+
+.reviews-grid[hidden] {
+  display: none;
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-top: 4px solid #e2001a;
+  border-radius: 8px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.review-stars {
+  color: #f5a623;
+  font-size: 20px;
+  letter-spacing: 2px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.reviews-section .review-text {
+  flex: 1;
+  margin: 0 0 16px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #444;
+}
+
+.review-meta {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  color: #777;
+}
+
+.review-meta strong {
+  color: #333;
+  font-size: 15px;
+}
+
+.reviews-all-link {
+  display: inline-block;
+  color: #e2001a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reviews-all-link:hover {
+  text-decoration: underline;
 }
 
 /* ===== FAQ SECTION ===== */
@@ -628,6 +687,11 @@ h2 {
   .video-section,
   .faq-section {
     padding: 40px 16px;
+  }
+
+  .reviews-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .gallery-grid {
