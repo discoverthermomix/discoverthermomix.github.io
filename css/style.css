@@ -26,6 +26,70 @@ h2 {
   margin: 0 0 16px;
 }
 
+/* ===== CURRENT OFFER BAR ===== */
+.offer-bar {
+  display: block;
+  overflow: hidden;
+  background: #d9480f;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 0;
+  font-size: 15px;
+  line-height: 1.4;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.offer-bar:hover,
+.offer-bar:focus {
+  background: #c2410c;
+  color: #fff;
+}
+
+.offer-bar-track {
+  display: inline-flex;
+  animation: offer-bar-scroll 30s linear infinite;
+}
+
+.offer-bar:hover .offer-bar-track,
+.offer-bar:focus .offer-bar-track {
+  animation-play-state: paused;
+}
+
+.offer-bar-content {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.offer-bar-label {
+  margin: 0 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.offer-bar-item::after {
+  content: "★";
+  margin: 0 24px;
+}
+
+.offer-bar-cta {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+@keyframes offer-bar-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .offer-bar-track {
+    animation: none;
+  }
+}
+
 /* ===== NAVIGATION ===== */
 .site-nav {
   position: sticky;
