@@ -90,6 +90,25 @@ h2 {
   }
 }
 
+/* Black Friday variant of the offer bar */
+.offer-bar-black {
+  background: #000;
+  border-bottom: 1px solid #00a650;
+}
+
+.offer-bar-black:hover,
+.offer-bar-black:focus {
+  background: #111;
+}
+
+.offer-bar-black .offer-bar-item::after {
+  content: "💚";
+}
+
+.offer-bar-black .offer-bar-cta {
+  color: #39d98a;
+}
+
 /* ===== NAVIGATION ===== */
 .site-nav {
   position: sticky;
@@ -215,6 +234,37 @@ h2 {
 .section-bg-light { background-color: #fafafa; }
 .section-bg-white { background-color: #fff; }
 .section-bg-dark  { background-color: #1a1a1a; }
+.section-bg-black { background-color: #000; }
+
+/* ===== BLACK FRIDAY SECTION ===== */
+#black-friday {
+  scroll-margin-top: 64px; /* keep heading clear of the sticky nav */
+}
+
+.black-friday-section h2 {
+  color: #fff;
+}
+
+.black-friday-section .text-content p {
+  color: #e5e5e5;
+}
+
+.black-friday-section .text-content p.black-friday-highlight {
+  color: #39d98a;
+  font-weight: 700;
+}
+
+.black-friday-section .image-content img {
+  border-radius: 8px;
+}
+
+.btn-black-friday {
+  background-color: #00a650;
+}
+
+.btn-black-friday:hover {
+  background-color: #008a43;
+}
 
 /* ===== LAYOUT ===== */
 .top-section-container,
